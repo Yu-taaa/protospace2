@@ -27,7 +27,7 @@ before_action :authenticate_user!, only: [:new, :edit, :destroy]
 
   def edit
     @prototype = Prototype.find(params[:id])
-    @comment = Comment.new
+   
     unless @prototype.user_id == current_user.id
       redirect_to action: :index
     end
@@ -37,6 +37,8 @@ before_action :authenticate_user!, only: [:new, :edit, :destroy]
     @prototype = Prototype.find(params[:id])
 
     if @prototype.update(prototype_params)
+      @comment = Comment.new
+      @comments = @prototype.comments.includes(:user)
       render :show
     else
       render :edit
